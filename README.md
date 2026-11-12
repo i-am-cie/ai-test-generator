@@ -6,6 +6,7 @@ A local web tool that turns source code or plain-language requirements into soft
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![LLM](https://img.shields.io/badge/LLM-Ollama-black)
 ![Offline](https://img.shields.io/badge/Offline-100%25-success)
+![Tests](https://img.shields.io/badge/tests-8%20passed-success)
 
 ## What it does
 
@@ -36,6 +37,15 @@ python app.py
 ```
 
 Then open <http://localhost:5000> in your browser. The Flask development server listens on port `5000`.
+
+## Run tests
+
+The repository ships with a pytest suite under `tests/` that covers the structured-case JSON parsing and the JSON/CSV export. The Ollama call is mocked, so the suite does **not** require Ollama to be running or the `ollama` package to be installed.
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest tests/ -v
+```
 
 ## Usage
 
@@ -87,7 +97,7 @@ export OLLAMA_HOST=http://192.168.1.20:11434   # Windows PowerShell: $env:OLLAMA
 4. The raw Markdown returned by the model is passed back to the page and displayed as text.
 5. For structured export, `generate_structured_test_cases` asks the model for a JSON array, extracts the first `[ ... ]` block and writes it to disk as JSON or CSV.
 
-There is no test runner and no result validation: the output is whatever the model returns.
+The repository's own pytest suite covers only this parsing/export code; it does **not** execute or validate the tests that the model generates.
 
 ## Limitations
 
@@ -104,4 +114,4 @@ MIT © 2026 i-am-cie — see [LICENSE](LICENSE).
 
 ## 中文说明
 
-本项目是一个基于本地 Ollama 大模型的测试用例生成工具，支持「代码转单元测试」「需求转测试计划」「边界用例生成」三种模式，并提供命令行 JSON/CSV 结构化导出。所有数据都留在本机，无需 API Key。使用前请先安装并启动 Ollama、拉取默认模型 `qwen2.5:7b`，然后 `pip install -r requirements.txt` 并 `python app.py`，浏览器打开 http://localhost:5000 即可。注意：模型生成结果需要人工复核，工具本身不执行测试。
+本项目是一个基于本地 Ollama 大模型的测试用例生成工具，支持「代码转单元测试」「需求转测试计划」「边界用例生成」三种模式，并提供命令行 JSON/CSV 结构化导出。所有数据都留在本机，无需 API Key。使用前请先安装并启动 Ollama、拉取默认模型 `qwen2.5:7b`，然后 `pip install -r requirements.txt` 并 `python app.py`，浏览器打开 http://localhost:5000 即可。仓库自带 pytest 单元测试（`tests/` 目录），覆盖结构化用例解析与 JSON/CSV 导出逻辑，大模型调用已打桩，运行测试无需启动 Ollama：`pip install -r requirements-dev.txt` 后 `python -m pytest tests/ -v`。注意：模型生成结果需要人工复核，工具本身不执行测试。
